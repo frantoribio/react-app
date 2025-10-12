@@ -3,14 +3,22 @@ import axios from 'axios';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [contraseña, setPassword] = useState('');
 
   const handleLogin = e => {
     e.preventDefault();
-    axios.post('http://localhost:8080/auth/login', { email, password })
+    axios.post('http://localhost:8080/auth/login', { email, contraseña })
       .then(res => {
         localStorage.setItem('token', res.data.token);
         alert(`Bienvenido, rol: ${res.data.rol}`);
+        // Redirigir según el rol
+        if (res.data.rol === 'ADMIN') {
+          window.location.href = '/admin/AdminDashboard';
+        } else if (res.data.rol === 'USER') {
+          window.location.href = '/user/home';
+        } else if (res.data.rol === 'OWNER') {
+          window.location.href = '/owner/panel';
+        } 
       })
       .catch(() => alert('Credenciales inválidas'));
   };
